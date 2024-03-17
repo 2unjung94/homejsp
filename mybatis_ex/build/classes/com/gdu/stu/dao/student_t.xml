@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gdu.stu.dao.student_t">
+<insert id="insertStudent"
+        parameterType="com.gdu.stu.dto.StudentDto">
+    <![CDATA[
+    INSERT INTO STUDENT_T (
+        STU_NO
+      , NAME
+      , KOR
+      , ENG
+      , MATH
+      , AVE
+      , MARK
+    ) VALUES(
+        BOARD_SEQ.NEXTVAL
+      , #{name} 
+      , #{kor}
+      , #{eng}
+      , #{math}
+      , TRUNC(((#{kor} + #{eng} + #{math}) / 3), 2)
+      , CASE WHEN TRUNC(((#{kor} + #{eng} + #{math}) / 3), 2) >= 90 AND TRUNC(((#{kor} + #{eng} + #{math}) / 3), 2) <= 100 THEN 'A'
+             WHEN TRUNC(((#{kor} + #{eng} + #{math}) / 3), 2) >= 80 AND TRUNC(((#{kor} + #{eng} + #{math}) / 3), 2) < 90 THEN 'B'
+             WHEN TRUNC(((#{kor} + #{eng} + #{math}) / 3), 2) >= 70 AND TRUNC(((#{kor} + #{eng} + #{math}) / 3), 2) < 80 THEN 'C'
+             WHEN TRUNC(((#{kor} + #{eng} + #{math}) / 3), 2) >= 60 AND TRUNC(((#{kor} + #{eng} + #{math}) / 3), 2) < 70 THEN 'D'
+             ELSE 'F'
+             END
+    )   
+    ]]>  
+
+</insert>
+<update id="updateStudent"
+        parameterType="com.gdu.stu.dto.StudentDto">
+    UPDATE STUDENT_T
+       SET NAME = ${name}
+         , KOR = #{kor}
+         , eng = #{eng}
+         , math = #{math}
+     WHERE STU_NO = #{student_no}
+</update>
+<delete id="deleteStudent">
+    DELETE 
+      FROM STUDENT_T 
+     WHERE STU_NO = #{student_no}
+</delete>
+<select id="selectStudentList"
+        resultType="com.gdu.stu.dto.StudentDto">
+    SELECT STU_NO, NAME, KOR, ENG, MATH, AVE, MARK
+      FROM STUDENT_T
+</select>
+<select id="getStudentCount"
+        resultType="int">
+    SELECT COUNT(*) 
+      FROM STUDENT_T
+</select>
+<select id="selectStudentByNo"
+        resultType="com.gdu.stu.dto.StudentDto">
+    SELECT STU_NO, NAME, KOR, ENG, MATH, AVE, MARK
+      FROM STUDENT
+     WHERE STU_NO = #{student_no}
+</select>
+</mapper>
